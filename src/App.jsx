@@ -24,7 +24,7 @@ export default function Board() {
   }
 
   function handleClick(i) {
-    if (squares[i]) {
+    if (squares[i] || calculateWinner(squares)) {
       return;
     }
     const newSquares = squares.slice();
