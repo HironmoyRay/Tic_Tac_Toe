@@ -10,10 +10,7 @@ function Square({ value, onSquareClick }) {
     </button>
   );
 }
-export default function Board() {
-  const [squares, setSquares] = useState(Array(9).fill(null));
-  const [xIsNext, setXIsNext] = useState(true);
-
+function Board({ xIsNext, squares, onPlay }) {
   const winner = calculateWinner(squares);
   let status;
 
@@ -27,14 +24,13 @@ export default function Board() {
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
-    const newSquares = squares.slice();
+    const nextSquares = squares.slice();
     if (xIsNext) {
-      newSquares[i] = "X";
+      nextSquares[i] = "X";
     } else {
-      newSquares[i] = "O";
+      nextSquares[i] = "O";
     }
-    setXIsNext(!xIsNext);
-    setSquares(newSquares);
+    onPlay(nextSquares);
   }
 
   return (
@@ -77,4 +73,25 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+export default function Game() {
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [xIsNext, setXIsNext] = useState(true);
+
+  const currentSquare = history[history.length - 1];
+  function handlePlay(nextSquares) {
+    setXIsNext(!xIsNext);
+    setHistory([...history, nextSquares]);
+  }
+  return (
+    <div>
+      <div>
+        <Board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay} />
+      </div>
+      <div>
+        <ol>{/*To be Update*/}</ol>
+      </div>
+    </div>
+  );
 }
